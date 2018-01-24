@@ -3,3 +3,5 @@ nice approach - https://hiya.com/blog/2017/10/02/kubernetes-base-jenkins-statefu
 my approach - multiple cache volumes
 
 maven speedups: - https://codefresh.io/blog/java_docker_pipeline/ --> https://zeroturnaround.com/rebellabs/your-maven-build-is-slow-speed-it-up/
+
+mavenK8s cache example - https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/maven-with-cache.groovy
