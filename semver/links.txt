@@ -1,0 +1,1 @@
+https://github.com/terradatum/jenkins-pipeline-library/blob/master/src/com/terradatum/jenkins/workflow/VersionType.groovy
