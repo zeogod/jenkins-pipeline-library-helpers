@@ -1,6 +1,7 @@
 nice approach - https://hiya.com/blog/2017/10/02/kubernetes-base-jenkins-stateful-agents/
 
 my approach - multiple cache volumes
+approach 2 - 1 volume with write uppon exit
 
 maven speedups: - https://codefresh.io/blog/java_docker_pipeline/ --> https://zeroturnaround.com/rebellabs/your-maven-build-is-slow-speed-it-up/
 
