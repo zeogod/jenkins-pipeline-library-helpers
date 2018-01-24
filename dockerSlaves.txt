@@ -1,1 +1,4 @@
+nice approach - https://hiya.com/blog/2017/10/02/kubernetes-base-jenkins-stateful-agents/
 
+
+my approach - multiple cache volumes
