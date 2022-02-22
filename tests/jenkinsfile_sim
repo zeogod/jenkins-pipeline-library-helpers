@@ -1,0 +1,70 @@
+@Library(['jenkins-pipeline-libs@master']) _
+properties([pipelineTriggers([githubPush()])])
+timestamps {
+    node('windows-basic') {
+    	stage("Prepare") {
+    	    //scmTools.checkoutscm()
+    		// checkout scm
+    		// getScmHelpVars()
+    		testlib()
+    		testlib()
+    		testlib.powershellscript()
+    		testlib()
+    		testlib.powershellscript()
+    		testlib()
+    	}
+        
+    	stage("Build") {
+    		
+    		echo "starting - ${STAGE_NAME} ..."
+    		
+    		sh '''
+    			echo "hello world"
+    			curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip
+    			unzip -o packer.zip
+    			./packer --version
+    		'''
+    		
+    		// updateGithubStatus()
+    		echo "Ending - ${STAGE_NAME} ..."
+       }
+    }
+}
+
+
+
+def getScmHelpVars() {
+	def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+	def scmRepoName = scmUrl.tokenize('/')[3].split("\\.")[0]
+	def scmRepoPath = scmUrl.tokenize('/')[2].split("\\.")[0] + '/' + scmRepoName
+	env.REPO_PATH = scmRepoPath
+	def scmBranch = scm.branches.toString()
+	println("scm url is:${scmUrl}")
+	println("scm repo name is:${scmRepoName}")
+	println("scm repo Path is:${scmRepoPath}")
+	println("scm branch is:${scmBranch}")
+	scmBranch = scmBranch.tokenize('[*/')[0].tokenize(']')[0]
+	println("scm branch is:${scmBranch}")
+	if (!env.GIT_COMMIT) {
+		if (isUnix()) {
+			env.GIT_COMMIT = sh([returnStdout: true, script: 'git rev-parse HEAD']).trim()
+		}
+	}
+	println("scm commit is:${env.GIT_COMMIT}")
+}
+
+def updateGithubStatus() {
+		withCredentials([usernamePassword(credentialsId: 'zeogod-github-access', passwordVariable: 'token', usernameVariable: 'username')]) 
+		{
+			withEnv(['REPO_PATH=' + env.REPO_PATH, 'GIT_COMMIT=' + env.GIT_COMMIT])
+			{
+				sh '''
+					set +x
+					curl -s --location --request POST "https://api.GitHub.com/repos/$REPO_PATH/statuses/$GIT_COMMIT" \\
+						--header "Authorization: Bearer $token" \\
+						--header 'Content-Type: application/json' \\
+						--data-raw '{"context": "Build", "state": "success", "description": "Jenkins Build description", "target_url": "http://my.jenkinsservernoreal.com/job/JOB_NAME/31/console"}'
+				'''
+		    }
+		}
+}
